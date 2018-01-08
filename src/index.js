@@ -1,12 +1,5 @@
-/**
- * Collo is Observable on the main collection instance
- * @param collection
- * @param opts
- * @returns {collo}
- */
-function Piksel(collection, opts={}) {
-	return this;
+import { Gate } from './Gate';
+
+export default{ 
+    Gate
 };
-
-
-export default Piksel;
