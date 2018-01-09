@@ -6,6 +6,6 @@
  */
 export default class Piksel {
   test() {
-    console.log('HELLO');
+    console.log('HELLO!?');
   }
 } 
