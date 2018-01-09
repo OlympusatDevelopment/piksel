@@ -1,5 +1,5 @@
-import { Gate } from './Gate';
+import { Piksel } from './Piksel';
 
 export default{ 
-    Gate
+    Piksel
 };
