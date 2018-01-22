@@ -9,16 +9,17 @@ import {
  * @param options
  * @constructor
  */
-const Video = options => {
-    options = {
-        videoID: null,
-        providerType: null,
-        startTime: null,
-        endTime: null
+class Video {
+    constructor(options) {
+        this.options.videoID = null,
+        this.options.providerType  = null,
+        this.options.providerType  = null,
+        this.options.startTime = null,
+        this.options.endTime = null 
     };
     
-    const _createEndpoint = ()=>{
-        
+    const _getEndpoint = (apiUrl)=>{
+        return apiUrl;
     };
 
     const _createIFrameHTML = ()=>{
@@ -35,7 +36,7 @@ const Video = options => {
       },
 
       getEmbedCode: ()=>{
-
+        return _getEndpoint();
       },
 
       subscribeEvents: ()=>{

@@ -4,13 +4,10 @@
  * @param options
  * @constructor
  */
-const Piksel = ()=>{
-  return {
-    test: ()=>{
+class Piksel {
+  constructor(){
       console.log('HELLO!?');
-    }
-  };
-};
-
+  }
+}
 
 export default Piksel;

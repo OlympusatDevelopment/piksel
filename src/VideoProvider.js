@@ -11,64 +11,75 @@ import videoProviderModel from './utils/videoProviderModel';
  * @param options
  * @constructor
  */
-const VideoProvider = config=>{
-    config = {
-        endpointURL: null,
-        apiKey: null,
-        pingInterval: null,
-        startTime: null,
-        endTime: null
-    };
+class VideoProvider {
+    constructor() {
+        let embedCode = null;
+        let endpoint = null;
+
+        this.config = {
+            endpointURL: null,
+            apiKey: null,
+            pingInterval: null,
+            startTime: null,
+            endTime: null
+        };
+    }
     
-    const _getEndpointURL = (providerType)=>{
+    _getEndpointURL(providerType) {
+        if(this.endpoint)
+            return this.endpoint;
+
         return PIKSEL_ENDPOINT
-            .replace('{APP_TOKEN}', '')
+            .replace('{APP_TOKEN}', this.config.apiKey)
             .replace('{PROJECT_UUID}', '');
-    };
+    }
     
-    const _getEmbedCode = (endpointURL)=>{
+    _getEmbedCode(endpointURL){
+        if(this.embedCode)
+            return this.embedCode;
+
         return videoProviderModel.get({url: endpointURL})
             .then(res=> {
+                console.log(btoa(res.WsEmbedResponse.embedcode)); // decode embed code from base64
                 return btoa(res.WsEmbedResponse.embedcode);
             });
-    };
+    }
     
-    const _init = ()=>{
+    _init(){
         const endpointURL = _getEndpointURL();
 
         _getEmbedCode(endpointURL);
-    };
+    }
 
-    return {
-      test: ()=>{
-        console.log('HELLO!?');
-      },
 
-      getEmbedCode: ()=>{
+    test(){
+    console.log('HELLO');
+    }
+
+    getEmbedCode(){
         return _getEmbedCode();
-      },
+    }
 
-      publishEvents: ()=>{
+    publishEvents(){
 
-      },
+    }
 
-      play: ()=>{
+    play(){
 
-      },
+    }
 
-      pause: ()=>{
+    pause(){
 
-      },
+    }
 
-      skip: ()=>{
-        
-      },
+    skip(){
+    
+    }
 
-      dispatchPlayTime: ()=>{
+    dispatchPlayTime(){
 
-      }
-    };
-  };
+    }
+  }
   
   
   export default VideoProvider;
