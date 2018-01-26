@@ -1,6 +1,8 @@
 ### Piksel
 An open source interface for embedding a piksel player on your page and interacting with its api. This simplifies the implementation process by abstraction.
 
+* NOTE: This documentation is incomplete and will be updated when the package has been developed a little more.
+
 #### Examples
 https://jsfiddle.net/yxt290L9/
 
@@ -39,7 +41,6 @@ The above instance expect there to be a div on the DOM with an id of "video-wrap
 ```
 
 ##### Options
-This documentation will be updated when the package has been developed a little more
 ```
 basePlayerUrl: null,
 videoUUID: null,
