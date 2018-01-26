@@ -29,7 +29,10 @@
     "vinyl-source-stream": "^1.1.0",
     "watchify": "^3.7.0"
   },
-  "dependencies": {},
+  "dependencies": {
+    "axios": "^0.17.1",
+    "bluebird": "^3.5.1"
+  },
   "peerDependencies": {
     "babel-polyfill": "^6.23.0"
   }

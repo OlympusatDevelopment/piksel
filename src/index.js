@@ -1,5 +1,6 @@
-import { Piksel } from './Piksel';
+import Piksel from './Piksel';
+// import { Video } from './Video';
 
-export default{ 
+export default { 
     Piksel
 };
