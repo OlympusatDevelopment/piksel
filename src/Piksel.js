@@ -51,6 +51,12 @@ class Piksel {
     return this._initPlayer(this.options);
   }
 
+  play() { this.player.play(); }
+  pause() { this.player.pause(); }
+  speedIncrease() { this.player.playbackRate(this.getCurrentRate() + 0.5); }
+  speedDecrease() { this.player.playbackRate(this.getCurrentRate() - 0.5); }
+  getCurrentRate() { return this.player.playbackRate(); }
+
   _initPlayer(options) {
     return new Promise((resolve, reject) => {
       // Clean the base url if needed
@@ -86,47 +92,6 @@ class Piksel {
     });
   }
 
-  /**
-   * Check for the embed element and add inject the script in the embed
-   * @param {*} elemId 
-   * @param {*} script 
-   */
-  _injectScript(elemId, script) {
-    const injectElement = document.getElementById(elemId);
-
-    if (!injectElement) {
-      throw new Error(`The injectID (#${this.options.injectID}) does not reference a valid element on the DOM`);
-    }
-    // const wrapper = document.createElement('div');
-    // const wrapperId = `${this.options.injectID}-${this.options.playerID}__wrapper`;
-    // wrapper.setAttribute('id', wrapperId);
-
-    // Double wrap the script to prevent "Unexpected token errors in React"
-    // injectElement
-    //   .appendChild(wrapper);
-    injectElement
-      .appendChild(script);
-
-    // document.getElementById(wrapperId)
-    //   .appendChild(script);
-  }
-
-
-  publishEvents() {
-  }
-
-  play() { this.player.play(); }
-  pause() { this.player.pause(); }
-  speedIncrease() { this.player.playbackRate(this.getCurrentRate() + 0.5); }
-  speedDecrease() { this.player.playbackRate(this.getCurrentRate() - 0.5); }
-  getCurrentRate() { return this.player.playbackRate(); }
-
-  skip() {
-  }
-
-  dispatchPlayTime() {
-  }
-
   _makePlayerUrl() {
     if (this.options.overrideURL) {
       return this.options.overrideURL;
@@ -150,6 +115,22 @@ class Piksel {
     script.setAttribute("id", playerID);
 
     return script;
+  }
+
+  /**
+ * Check for the embed element and inject the script in the embed
+ * @param {*} elemId 
+ * @param {*} script 
+ */
+  _injectScript(elemId, script) {
+    const injectElement = document.getElementById(elemId);
+
+    if (!injectElement) {
+      throw new Error(`The injectID (#${this.options.injectID}) does not reference a valid element on the DOM`);
+    }
+
+    injectElement
+      .appendChild(script);
   }
 }
 
