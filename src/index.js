@@ -1,8 +1,6 @@
-import { Piksel } from './Piksel';
-import { VideoProvider } from './VideoProvider';
+import Piksel from './Piksel';
 // import { Video } from './Video';
 
-export default{ 
-    Piksel,
-    VideoProvider
+export default { 
+    Piksel
 };
