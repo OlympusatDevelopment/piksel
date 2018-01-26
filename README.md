@@ -1,5 +1,9 @@
+### Piksel
+An open source interface for embedding a piksel player on your page and interacting with its api. This simplifies the implementation process by abstraction.
+
 #### Examples
 https://jsfiddle.net/yxt290L9/
+
 https://jsfiddle.net/shaolintibo/wdt0Lko6/
 
 #### Usage
