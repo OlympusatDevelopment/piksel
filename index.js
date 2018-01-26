@@ -1,3 +1,3 @@
-var piksel = require('./lib/Piksel').default;
+var piksel = require('./lib/index').default;
 
 module.exports = piksel;

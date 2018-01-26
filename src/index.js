@@ -1,5 +1,6 @@
-import { Gate } from './Gate';
+import Piksel from './Piksel';
+// import { Video } from './Video';
 
-export default{ 
-    Gate
+export default { 
+    Piksel
 };
