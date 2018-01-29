@@ -1,20 +1,5 @@
-// import {
-//     PIKSEL_API_KEY,
-//     PIKSEL_ENDPOINT
-// } from './options';
-import pikselModel from './models/pikselModel';
 import Promise from 'bluebird';
 
-// const piksel = {
-//   play:()=>{},
-//   pause: ()=>{},
-//   load:()=>{},
-//   seekFwd: ()=>{},
-//   seekBack:()=>{},
-//   skipTo: (seconds)=>{},
-//   startAt: (seconds)=>{},
-//   endAt: (seconds)=>{}  
-//   }
 /** 
  * Object for 
  * the options argument is the main optionsuration object passed to the instantitation
@@ -26,20 +11,28 @@ class Piksel {
     this.options = Object.assign({}, {
       basePlayerUrl: null,
       videoUUID: null,
-      pingInterval: null,
-      startTime: null,
-      endTime: null,
       embedCode: null,
       playerReady: false,
       playerID: Math.floor(Math.random() * 100000),
       clientAPI: null,
       projectID: null,
+
       autoplay: false,
-      width: '900px',
-      height: '600px',
+      startTime: false,// in seconds. (Works only with autoplay)
+      endTime: false,// in seconds. 
+      defaultVolume: null,// Must be a string value
+      theme: {
+        defaultControlsColor: null, // hex string
+        defaultControlsHoverColor: null, // hex string
+      },
+
+      width: null,
+      height: null,
       injectID: null,
-      overrideURL: false,
-      _script: null
+      overrideURL: null,
+      _script: null,
+      _player: null,
+      _injectElement: null
     }, options);
 
     this.options._callbackFnName = `callback__${this.options.playerID}`;
@@ -51,11 +44,18 @@ class Piksel {
     return this._initPlayer(this.options);
   }
 
-  play() { this.player.play(); }
-  pause() { this.player.pause(); }
-  speedIncrease() { this.player.playbackRate(this.getCurrentRate() + 0.5); }
-  speedDecrease() { this.player.playbackRate(this.getCurrentRate() - 0.5); }
-  getCurrentRate() { return this.player.playbackRate(); }
+  play() { this._player.play(); }
+  pause() { this._player.pause(); }
+  getCurrentTime() { return this._player.currentTime(); }
+  setCurrentTime(time) { this._player.currentTime(time); }
+  speedUp() { this._player.playbackRate(this.getCurrentRate() + 0.5); }
+  speedDown() { this._player.playbackRate(this.getCurrentRate() - 0.5); }
+  getCurrentRate() { return this._player.playbackRate(); }
+  getCurrentVolume() { return this._player.volume(); }
+  mute() { this._player.volume(0); }
+  volumeUp() { this._player.volume(this._player.volume() + 0.1); }
+  volumeDown() { this._player.volume(this._player.volume() - 0.1); }
+
 
   _initPlayer(options) {
     return new Promise((resolve, reject) => {
@@ -76,13 +76,14 @@ class Piksel {
 
       // Once the player has loaded the video, set the context and resolve
       this.events.onReady = player => {
-        this.playerReady = true;
+        this._playerReady = true;
 
         /**
          * Play/pause, etc are in the prototype
          * NOTE: This player is the SAME as the window.player_manager.playerInstances[this.options._appid]
          */
-        this.player = player;
+        this._player = player;
+        this._proxyEvents(this._player.el_.children[0]);
 
         resolve(this);// Resolve our Class, NOT the player itself
       }
@@ -98,13 +99,17 @@ class Piksel {
     } else {
       let base = '';
 
+      // Decide if we're loading a project id or video/program id
       if (this.options.projectID) {
         base = `${this.options.basePlayerUrl}/p/${this.options.projectID}`;
       } else if (this.options.videoUUID) {
         base = `${this.options.basePlayerUrl}/v/${this.options.videoUUID}`;
       }
 
-      return `${base}?embed=js&de-callback-method=${this.options._callbackFnName}&de-html-default=true&targetId=${this.options.injectID}&de-appid=${this.options._appid}`
+      return this._buildPlayerOptions(
+        `${base}?embed=js&de-callback-method=${this.options._callbackFnName}&de-html-default=true&targetId=${this.options.injectID}&de-appid=${this.options._appid}`,
+        this.options
+      );
     }
   }
 
@@ -123,14 +128,75 @@ class Piksel {
  * @param {*} script 
  */
   _injectScript(elemId, script) {
-    const injectElement = document.getElementById(elemId);
+    this._injectElement = document.getElementById(elemId);
 
-    if (!injectElement) {
+    if (!this._injectElement) {
       throw new Error(`The injectID (#${this.options.injectID}) does not reference a valid element on the DOM`);
     }
 
-    injectElement
+    this._injectElement
       .appendChild(script);
+  }
+
+  _buildPlayerOptions(url, options) {
+    let _tmpUrl = url;
+    const appendOption = str => option => `${str}&${option}`;
+
+    // @todo create a map of the property name and the 'de-' parameter name, then loop through and set, instead of manually conditioning these
+    if (options.autoplay) { _tmpUrl = appendOption(_tmpUrl)(`de-autoPlay=${options.autoplay}`); }
+    if (options.defaultVolume) { _tmpUrl = appendOption(_tmpUrl)(`de-volume=${options.defaultVolume}`); }
+    if (options.startTime) { _tmpUrl = appendOption(_tmpUrl)(`de-start=${options.startTime}`); }
+    if (options.endTime) { _tmpUrl = appendOption(_tmpUrl)(`de-end=${options.endTime}`); }
+    if (options.theme.defaultControlsColor) { _tmpUrl = appendOption(_tmpUrl)(`de-color-default=${options.theme.defaultControlsColor}`); }
+    if (options.theme.defaultControlsHoverColor) { _tmpUrl = appendOption(_tmpUrl)(`de-color-hover=${options.theme.defaultControlsHoverColor}`); }
+    // if (options.loop) { _tmpUrl = appendOption(_tmpUrl)(`de-loop=${options.loop}`); }
+
+    return _tmpUrl;
+  }
+
+  _proxyEvents(elem) {
+    const self = this;
+    const events = ['playing', 'pause', 'seeking', 'seeked', 'timeupdate', 'volumechange', 'ended', 'error', 'loadstart'];
+    // document.body.addEventListener(`piksel__playing`, e => {
+    //   console.log('piksel__timeupdate EVENT picked up', e, e.data.eventName, e.data.value);
+    // });
+
+    events.forEach(eventName =>
+      elem.addEventListener(eventName, e => {
+        let _tmpEvent = new Event(`piksel__${self.options.playerID}`);
+        let _tmpEventSpecific = new Event(`piksel__${eventName}`);
+
+        const data = {
+          value: self._decideEventValue(eventName),
+          timestamp: Date.now(),
+          playerID: self.options.playerID,
+          videoID: self.options.videoUUID,
+          eventName
+        };
+
+        _tmpEvent.data = data;
+        _tmpEventSpecific.data = data;
+
+        // Dispatch the events to the document.
+        document.body.dispatchEvent(_tmpEvent);
+        document.body.dispatchEvent(_tmpEventSpecific);
+      })
+    );
+  }
+
+  _decideEventValue(eventName) {
+    switch (eventName) {
+      case 'timeupdate':
+      case 'seeking':
+      case 'seeked':
+      case 'pause':
+      case 'playing':
+        return this._player.currentTime();
+      case 'volumechange':
+        return this._player.volume();
+      default:
+        return true;
+    }
   }
 }
 
