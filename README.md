@@ -29,16 +29,15 @@ Each instance of the player adds a new player to the DOM for you, in the specifi
 new Piksel({
   basePlayerUrl: "https://player.piksel.com",
   playerID: '[YOUR PLAYER ID HERE]',
-  // videoUUID: '[YOUR VIDEO ID HERE]',
-  projectID: '[YOUR PROJECT ID HERE]]',
+  videoUUID: '[YOUR VIDEO ID HERE]',
+  // projectID: '[YOUR PROJECT ID HERE]]',
   autoplay: true,
   width: '900px',
   height: '600px',
   injectID: 'video-wrapper'
 })
   .then(pikselPlayer => {
-    this.setState({ pikselPlayer });
-    console.log('PLAY PROMISE RESOLVED', pikselPlayer);
+    // this.setState({ pikselPlayer });
   })
 ```
 
@@ -51,19 +50,23 @@ The above instance expect there to be a div on the DOM with an id of "video-wrap
 ```
 basePlayerUrl: null,
 videoUUID: null,
-pingInterval: null,
-startTime: null,
-endTime: null,
-embedCode: null,
-playerReady: false,
-playerID: Math.floor(Math.random() * 100000),
+playerID: '1234',
 clientAPI: null,
 projectID: null,
+
 autoplay: false,
-width: '900px',
-height: '600px',
+startTime: false,// in seconds. (Works only with autoplay)
+endTime: false,// in seconds. 
+defaultVolume: null,// Must be a string value
+theme: {
+  defaultControlsColor: null, // hex string
+  defaultControlsHoverColor: null, // hex string
+},
+
+width: null,
+height: null,
 injectID: null,
-overrideURL: false,
+overrideURL: null,
 ```
 
 #### Methods
