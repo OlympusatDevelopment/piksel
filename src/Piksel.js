@@ -10,7 +10,7 @@ class Piksel {
   constructor(options) {
     this.options = Object.assign({}, {
       basePlayerUrl: null,
-      videoUUID: null,
+      videoUUID: null, 
       embedCode: null,
       playerReady: false,
       playerID: Math.floor(Math.random() * 100000),
@@ -106,8 +106,15 @@ class Piksel {
         base = `${this.options.basePlayerUrl}/v/${this.options.videoUUID}`;
       }
 
+      let urlString = `${base}?embed=js&de-callback-method=${this.options._callbackFnName}&de-html-default=true&targetId=${this.options.injectID}&de-appid=${this.options._appid}`;
+
+      // Support for additional player url parameters
+      if (this.options.addonUrlParams) {
+        urlString = `${urlString}&${this.options.addonUrlParams}`;
+      }
+
       return this._buildPlayerOptions(
-        `${base}?embed=js&de-callback-method=${this.options._callbackFnName}&de-html-default=true&targetId=${this.options.injectID}&de-appid=${this.options._appid}`,
+        urlString,
         this.options
       );
     }

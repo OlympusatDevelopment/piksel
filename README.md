@@ -34,7 +34,8 @@ new Piksel({
   autoplay: true,
   width: '900px',
   height: '600px',
-  injectID: 'video-wrapper'
+  injectID: 'video-wrapper',
+  addonUrlParams: 'de-googleads-disable=true'
 })
   .then(pikselPlayer => {
     // this.setState({ pikselPlayer });
@@ -67,6 +68,7 @@ width: null,
 height: null,
 injectID: null,
 overrideURL: null,
+addonUrlParams: 'de-googleads-disable=true&my-other-param=false' // separate url params with an ampersand.
 ```
 
 #### Methods
