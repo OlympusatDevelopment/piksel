@@ -4,18 +4,14 @@
 <head>
   <meta charset="utf-8" />
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
-  <title>Page Title</title>
+  <title><%= htmlWebpackPlugin.options.title %></title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <script type="text/javascript">
-    function myCustomCallback(player) {
-      alert("de-callback-method has been called : player id" + player.id_);
-
-    }
-  </script>
 </head>
 
-<body>
-  <script src="https://player.piksel.com/p/dadpx320?embed=js&de-callback-method=myCustomCallback&de-html-default=true" async></script>
+<body> 
+  <div id="pikselPlayer"></div>
+
+  <script type="text/javascript" src="./example.js"></script>
 </body>
 
 </html>
