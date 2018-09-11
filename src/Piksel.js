@@ -25,6 +25,8 @@ class Piksel {
         defaultControlsColor: null, // hex string
         defaultControlsHoverColor: null, // hex string
       },
+      de: null,
+      unmutedByDefault: false,
 
       width: null,
       height: null,
@@ -41,6 +43,8 @@ class Piksel {
       onReady: () => { }
     };
 
+    this.unmute = this.unmute.bind(this);
+
     return this._initPlayer(this.options);
   }
 
@@ -53,6 +57,7 @@ class Piksel {
   getCurrentRate() { return this._player.playbackRate(); }
   getCurrentVolume() { return this._player.volume(); }
   mute() { this._player.volume(0); }
+  unmute() { this._player.muted(0); }
   volumeUp() { this._player.volume(this._player.volume() + 0.1); }
   volumeDown() { this._player.volume(this._player.volume() - 0.1); }
 
@@ -149,7 +154,9 @@ class Piksel {
     let _tmpUrl = url;
     const appendOption = str => option => `${str}&${option}`;
 
-    // @todo create a map of the property name and the 'de-' parameter name, then loop through and set, instead of manually conditioning these
+    
+
+    // LEGACY support from before the `de` option existed: @todo create a map of the property name and the 'de-' parameter name, then loop through and set, instead of manually conditioning these
     if (options.autoplay) { _tmpUrl = appendOption(_tmpUrl)(`de-autoPlay=${options.autoplay}`); }
     if (options.defaultVolume) { _tmpUrl = appendOption(_tmpUrl)(`de-volume=${options.defaultVolume}`); }
     if (options.startTime) { _tmpUrl = appendOption(_tmpUrl)(`de-start=${options.startTime}`); }
@@ -157,6 +164,13 @@ class Piksel {
     if (options.theme.defaultControlsColor) { _tmpUrl = appendOption(_tmpUrl)(`de-color-default=${options.theme.defaultControlsColor}`); }
     if (options.theme.defaultControlsHoverColor) { _tmpUrl = appendOption(_tmpUrl)(`de-color-hover=${options.theme.defaultControlsHoverColor}`); }
     // if (options.loop) { _tmpUrl = appendOption(_tmpUrl)(`de-loop=${options.loop}`); }
+
+    if (options.de) {
+      _tmpUrl = Object.entries(options.de)
+        .reduce((acc, [key, val]) => 
+          appendOption(acc)(`de-${key}=${val}`), 
+        _tmpUrl);
+    }
 
     return _tmpUrl;
   }
@@ -187,8 +201,18 @@ class Piksel {
         // Dispatch the events to the document.
         document.body.dispatchEvent(_tmpEvent);
         document.body.dispatchEvent(_tmpEventSpecific);
+
+        // Hook for when playing is confirmed
+        if (eventName === 'playing') {
+          this._onPlaying();
+        }
       })
     );
+  }
+
+  _onPlaying() {
+    // Player defaults to muted
+    if (this.options.unmutedByDefault) { this.unmute(); }
   }
 
   _decideEventValue(eventName) {
