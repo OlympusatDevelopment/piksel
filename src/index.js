@@ -1,5 +1,1 @@
-import Piksel from './Piksel';
-
-export default {
-  Piksel
-};
+export {default as Piksel} from './Piksel'; 
