@@ -9,6 +9,8 @@ Beware too that when you save these settings that the Single Player is still sel
 
 # Table of contents
 
+  * [Development](#Development)
+  * [Deployment](#Deployment)
   * [Import](#Import)
   * [Instantiate the player](#Instantiate-the-player)
     * [Instance Example](#Instance-Example)
@@ -20,6 +22,14 @@ Beware too that when you save these settings that the Single Player is still sel
   * [Examples from Piksel support](#Examples-from-Piksel-support)
   * [Additional Options](#Additional-Options)
 
+
+#### Development
+To get started developing, open this repo, run `npm install` on the main directory, then run `npm start`. This will start a webserver on the `/examples` folder. In the `/examples/src/index.js` file you'll find an instantiation of code in `/src`. Running the dev server also runs the production build script in parallel.
+
+Visit `http://localhost:9000/` in your browser and you should see an instance of the player (assuming the `videoUUID` in the `/examples/src/index.js` Piksel instance is valid.)
+
+#### Deployment
+To deploy, make sure you've been running with `npm start` or run `npm run build`. Once the project has built, it will build to the `/lib` folder, run `npm run release` or `npm publish`. Your local npm user must be the Olympusat npm account to publish.
 
 #### Import
 ```
