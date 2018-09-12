@@ -154,8 +154,6 @@ class Piksel {
     let _tmpUrl = url;
     const appendOption = str => option => `${str}&${option}`;
 
-    
-
     // LEGACY support from before the `de` option existed: @todo create a map of the property name and the 'de-' parameter name, then loop through and set, instead of manually conditioning these
     if (options.autoplay) { _tmpUrl = appendOption(_tmpUrl)(`de-autoPlay=${options.autoplay}`); }
     if (options.defaultVolume) { _tmpUrl = appendOption(_tmpUrl)(`de-volume=${options.defaultVolume}`); }

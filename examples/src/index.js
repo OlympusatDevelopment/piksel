@@ -27,7 +27,7 @@ import { Piksel } from '../../lib/piksel.js';
     console.log("Piksel Player Instance ", pikselPlayer._player);
 
     document.body.addEventListener(`piksel__pikselPlayer`, e => {
-      // console.log("EVT piksel__pikselPlayer ", e);
+      // console.log("EVT piksel__pikselPlayer ", e); 
     });
   
     document.body.addEventListener(`piksel__playing`, e => {

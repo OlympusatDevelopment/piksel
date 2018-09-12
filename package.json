@@ -4,7 +4,7 @@
   "description": "Piksel",
   "main": "index.js",
   "scripts": {
-    "start": "webpack-dev-server --mode development",
+    "start": "concurrently --kill-others \"npm run build\" \"webpack-dev-server --mode development\"",
     "build": "webpack --mode production",
     "release": "npm publish"
   },
@@ -20,6 +20,7 @@
     "babel-loader": "^7.1.4",
     "babel-plugin-transform-object-rest-spread": "^6.26.0",
     "babel-preset-env": "^1.7.0",
+    "concurrently": "^4.0.1",
     "html-webpack-plugin": "^3.2.0",
     "webpack": "^4.12.1",
     "webpack-cli": "^3.0.8",

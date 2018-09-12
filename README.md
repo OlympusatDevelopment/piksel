@@ -26,20 +26,43 @@ import { Piksel } from 'piksel';
 Each instance of the player adds a new player to the DOM for you, in the specified wrapper element. The element must exist or the Piksel class will throw an error.
 
 ```
-new Piksel({
-  basePlayerUrl: "https://player.piksel.com",
-  playerID: '[YOUR PLAYER ID HERE]',
-  videoUUID: '[YOUR VIDEO ID HERE]',
-  // projectID: '[YOUR PROJECT ID HERE]]',
-  autoplay: true,
-  width: '900px',
-  height: '600px',
-  injectID: 'video-wrapper',
-  addonUrlParams: 'de-googleads-disable=true'
-})
-  .then(pikselPlayer => {
-    // this.setState({ pikselPlayer });
+new Piksel({ 
+    basePlayerUrl: "https://player.piksel.com",
+    playerID: 'pikselPlayer', 
+    videoUUID: [YOUR VIDEO ID HERE],  
+    injectID: 'pikselPlayer',
+    clientAPI: null,
+    projectID: null,
+    unmutedByDefault: true,
+    de: {
+      "color-default": 'f4c441',
+      "color-hover": 'f46741',
+      "googleads-disable" : true,
+      start: '900',
+      end: '930',
+      volume: '100',// Must be a string value 0-100 0=mute
+      autoplay: true, 
+      width: '900px',    
+      height: '600px'
+    }
   })
+  .then(pikselPlayer => {
+    console.log("Wrapper Player Instance ", pikselPlayer);
+    console.log("Piksel Player Instance ", pikselPlayer._player);
+
+    document.body.addEventListener(`piksel__pikselPlayer`, e => {
+      // console.log("EVT piksel__pikselPlayer ", e);
+    });
+  
+    document.body.addEventListener(`piksel__playing`, e => {
+      console.log("EVT piksel__playing ", e);
+    });
+  
+    document.body.addEventListener(`piksel__volumechange`, e => {
+      console.log("EVT piksel__volumechange ", e);
+    });
+  });
+
 ```
 
 The above instance expect there to be a div on the DOM with an id of "video-wrapper"
