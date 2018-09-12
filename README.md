@@ -102,6 +102,7 @@ See this for a reference: https://faith.piksel.com/admin/help/PikselFaithHTML5/C
 | endTime | true | String time in seconds | Video should end playing at |
 | defaultVolume | true | String | Must be a string value 0-100 0=mute |
 | unmutedByDefault | | Boolean true/falsy | MArked true, this will override Chrome's new autoplay only on mute default. It works by unmuting the video as soon as it receives a playing event. |
+| addonUrlParams | true | String "de-googleads-disable=true&my-other-prop=false" | A way to pass additional url params to the instantiating player. The `de` prop is the preferred way to do this in >v2|
 | theme | true | {} | |
 | theme.defaultControlsColor | true | Hex color | |
 | theme.defaultControlsHoverColor | true | Hex color | |
